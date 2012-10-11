@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+site 'http://community.opscode.com/api/v1'
+
+cookbook 'ruby_build',
+    :git => 'git://github.com/fnichol/chef-ruby_build.git', :ref => 'v0.6.0'
+cookbook 'rbenv',
+    :git => 'https://github.com/fnichol/chef-rbenv', :ref => 'v0.6.4'
+cookbook 'apt',
+  :git => 'https://github.com/fnichol/chef-apt'
+
+cookbook  'nginx'
+cookbook  'runit'
+
+cookbook 'rails-lastmile',
+  :git => 'git://github.com/DanThiffault/rails-lastmile.git'
