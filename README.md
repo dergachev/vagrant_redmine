@@ -1,3 +1,65 @@
+######
+#
+# Lastmile tutorial http://blog.119labs.com/2012/03/rails-vagrant-chef/
+#
+######
+
+  #take a long time
+  sudo gem install librarian -v 
+  sudo gem install rails -v
+
+  #
+  #https://github.com/applicationsonline/librarian
+
+  #https://github.com/DanThiffault/rails-lastmile
+
+  rails new coolapp
+  cd coolapp
+
+  # edit Gemspec file to uncomment 'unicorn' and 'therubyracer'
+  wget https://gist.github.com/raw/2134403/cba7b055f6f5ce3cc4555d4712b2fc613f7dcc07/Cheffile
+
+  #fix some omissions from his Cheffile
+  echo "cookbook 'unicorn'" >> Cheffile
+  echo "cookbook 'build-essential'" >> Cheffile
+
+  librarian-chef init
+
+  mkdir cookbooks
+  mkdir cookbooks-src
+
+  echo "cookbooks" >> .gitignore
+  echo "cookbooks-src" >> .gitignore
+  echo "tmp" >> .gitignore
+
+  wget https://gist.github.com/raw/2134403/89cc39d26b736977f5d3925ba55bbb8a89d52b1b/Vagrantfile
+
+  vagrant up
+  runs on http://localhost:8080/
+
+
+######
+#
+# Rails unicorn from https://github.com/lebedevdsl/redmine 
+#
+######
+
+  echo "cookbook 'redmine', :git => 'git://github.com/lebedevdsl/redmine.git'" >> Cheffile
+
+
+
+## Install
+
+```bash
+git clone git://github.com/opscode-cookbooks/mysql.git
+# git clone git://github.com/opscode-cookbooks/apt.git
+git clone git://github.com/fnichol/chef-apt.git apt
+git clone git://github.com/opscode-cookbooks/openssl.git
+git clone git://github.com/lebedevdsl/redmine.git
+git clone git://github.com/fnichol/chef-rvm.git rvm
+
+
+# Old 
 ## Install
 
 ```bash

@@ -10,8 +10,14 @@ cookbook 'rbenv',
 cookbook 'apt',
   :git => 'https://github.com/fnichol/chef-apt'
 
+cookbook 'redmine',
+  :git => 'git://github.com/lebedevdsl/redmine.git'
+
+
 cookbook  'nginx'
 cookbook  'runit'
+cookbook  'unicorn'
+cookbook 'build-essential'
 
 cookbook 'rails-lastmile',
   :git => 'git://github.com/DanThiffault/rails-lastmile.git'

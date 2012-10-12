@@ -19,7 +19,7 @@ Vagrant::Config.run do |config|
   #config.vm.network :hostonly, "33.33.33.10"
 
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = ["cookbooks","cookbooks-src"]
+    chef.cookbooks_path = ["cookbooks","site-cookbooks"]
 
     chef.add_recipe "apt"
     chef.add_recipe "ruby_build"
@@ -28,6 +28,9 @@ Vagrant::Config.run do |config|
     chef.add_recipe "nginx"
     chef.add_recipe "unicorn"
     chef.add_recipe "rails-lastmile"
+
+# ssh agent forwarding
+    chef.add_recipe "root_ssh_agent::ppid"
 
     chef.json = {
       'rvm' => {
