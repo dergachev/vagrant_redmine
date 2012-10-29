@@ -1,46 +1,63 @@
 # vi: set ft=ruby :
 
 Vagrant::Config.run do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+  ## Consider packaging a customized vagrant box, pre-provisioned with vim, user
+  ## accounts, etc (see https://gist.github.com/3866825):
+  # config.vm.box = "precise64-customized"
+  ## To speed up "vagrant up" while debugging chef, consider packaging a VM with
+  ## redmine::dependencies already deployed:
+  # config.vm.box = "precise64-rm-deps"
+  config.vm.box = "precise64"
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "precise64-customized"
+  # Visit http://localhost:80 to access redmine:
+  config.vm.forward_port 80, 8080
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
-
-  # Assign this VM to a host-only network IP, allowing you to access it
-  # via the IP. Host-only networks can talk to the host machine as well as
-  # any other machines on the same network, but cannot be accessed (through this
-  # network interface) by any external networks.
-  #config.vm.network :hostonly, "33.33.33.10"
+  # SSH agent forwarding necessary if deploying from private git repo
+  config.ssh.forward_agent = true
 
   config.vm.provision :chef_solo do |chef|
+
     chef.cookbooks_path = ["cookbooks","site-cookbooks"]
 
-    chef.add_recipe "apt"
-    chef.add_recipe "ruby_build"
-    chef.add_recipe "rbenv::system"
-    chef.add_recipe "rbenv::vagrant"
-    chef.add_recipe "nginx"
-    chef.add_recipe "unicorn"
-    chef.add_recipe "rails-lastmile"
+    chef.json = {}
 
-# ssh agent forwarding
-    chef.add_recipe "root_ssh_agent::ppid"
-
-    chef.json = {
-      'rvm' => {
-        'default_ruby' => 'ruby-1.9.2-p290',
-        'gem_package' => {
-          'rvm_string' => 'ruby-1.9.2-p290'
-        }
+    chef.json = { 
+      'redmine' => { 
+        'db' => {
+          ## Override default credentials for newly-created mysql user:
+          # 'db_name' => 'redmine_production',
+          # 'db_user' => 'redmine',
+          # 'db_pass' => 'redMinePass',
+          
+          ## Initialize db from SQL dump file instead of rake db:migrate:
+          # 'load_sql_file' => '/vagrant/redmine_prod.sql.gz'
+        },
+        ## Override default attributes for cloning codebase
+        # 'git_repository' => 'git://github.com/redmine/redmine.git',
+        # 'git_revision' => '1.2.1'
+      },
+      # Required for mysql::server installed by chef_solo
+      'mysql' => { 'server_root_password' => 'mysqlRootUserPassword' },
+      # Workaround for rvm::vagrant bug https://github.com/fnichol/chef-rvm/issues/121
+      'rvm' => { 'vagrant' => {'system_chef_solo' => '/opt/vagrant_ruby/bin/chef-solo'}
       }
     }
 
-  end
+    # SSH agent forwarding necessary if deploying from private git repo
+    chef.add_recipe "root_ssh_agent::ppid"
 
+    # runs apt-get update beforehand
+    chef.add_recipe "apt::default"
+
+    chef.add_recipe "redmine::dependencies" # installs ruby and rvm
+
+    # Necessary for vagrant provision to work with chef-solo and rvm
+    chef.add_recipe "rvm::vagrant"
+
+    chef.add_recipe "redmine::default"
+    chef.add_recipe "redmine::database"
+    chef.add_recipe "redmine::nginx"
+
+    # chef.log_level = :debug
+  end
 end

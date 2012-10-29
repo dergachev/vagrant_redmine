@@ -1,23 +1,10 @@
 #!/usr/bin/env ruby
-#^syntax detection
 
 site 'http://community.opscode.com/api/v1'
 
-cookbook 'ruby_build',
-    :git => 'git://github.com/fnichol/chef-ruby_build.git', :ref => 'v0.6.0'
-cookbook 'rbenv',
-    :git => 'https://github.com/fnichol/chef-rbenv', :ref => 'v0.6.4'
-cookbook 'apt',
-  :git => 'https://github.com/fnichol/chef-apt'
-
-cookbook 'redmine',
-  :git => 'git://github.com/lebedevdsl/redmine.git'
-
-
-cookbook  'nginx'
-cookbook  'runit'
-cookbook  'unicorn'
-cookbook 'build-essential'
-
-cookbook 'rails-lastmile',
-  :git => 'git://github.com/DanThiffault/rails-lastmile.git'
+cookbook 'apt'
+cookbook 'nginx'
+cookbook 'mysql'
+cookbook 'database'
+cookbook 'rvm', :git => 'https://github.com/fnichol/chef-rvm'
+cookbook 'root_ssh_agent', :git => 'https://github.com/dergachev/chef_root_ssh_agent.git'
