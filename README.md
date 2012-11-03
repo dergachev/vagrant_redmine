@@ -83,3 +83,7 @@ which you'll need to figure out via trial and error. Good luck! In case it
 helps, "Debugging Tips" section lists some of the gotchas I came
 across in the course of creating the cookbook.
 
+### More info
+
+See [NOTES.md](https://github.com/dergachev/vagrant_redmine/blob/master/NOTES.md) for extensive debugging tips and relevant resources.
+
