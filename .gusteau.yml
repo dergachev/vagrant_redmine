@@ -1,0 +1,39 @@
+# before:
+#  - librarian-chef install
+
+environments:
+  production:
+    attributes:
+      mysql:
+        server_root_password: 'root'
+        server_debian_password: 'root'
+        server_repl_password: 'root'
+      # redmine:
+      #   db:
+      #     # Initialize db from SQL dump file instead of rake db:migrate
+      #     load_sql_file: '/vagrant/redmine_prod.sql.gz'
+      #     # Override default credentials for newly-created mysql user:
+      #     db_name: 'redmine_production'
+      #     db_user: redmine
+      #     db_pass: redMinePass
+      #   # Override default attributes for cloning codebase
+      #   git_repository: 'git
+      #   git_repository: 'git://github.com/redmine/redmine.git',
+      #   git_revision: '1.2.1'
+    run_list:
+      - apt::default
+      - redmine::dependencies
+      - redmine::default
+      - redmine::database
+      - redmine::nginx
+    nodes:
+      # server:
+      #   host: alex-rm-dev.mimosa.ewdev.ca
+      vagrant:
+        host: 192.168.50.4
+        user: vagrant
+        password: vagrant
+        vagrant:
+          IP: 192.168.50.4
+          cpu: 2
+          memory: 512
