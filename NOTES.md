@@ -7,6 +7,8 @@ compiled in the course of developing the tutorial.
 
 ### RVM cookbook
 
+*UPDATE*: rvm was removed as a dependency.
+
 The RVM cookbooks offers the following recipes:
 
 * `rvm::system_install`: installs rvm gem only
